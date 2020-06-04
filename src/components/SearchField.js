@@ -13,9 +13,17 @@ class SearchField extends Component {
   };
   render() {
     return (
-      <div>
-        <input type="text" onChange={this.search}></input>
-        <button onSubmit={this.submit}>Submit</button>
+      <div className="mb-4">
+        <form action="" className="form-inline">
+          <input
+            type="text"
+            className="form-control mr-4"
+            placeholder="Type something here"
+          />
+          <button onSubmit={this.props.search} className="btn btn-primary">
+            Submit
+          </button>
+        </form>
       </div>
     );
   }

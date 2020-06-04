@@ -4,20 +4,23 @@ import GIFCard from "./components/GIFCard";
 import SearchField from "./components/SearchField";
 import axios from "axios";
 
+// API KEY
+const apiKey = process.env.REACT_APP_GIPHY_API_KEY;
+const trendingEndpoint = `http://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=9`;
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      input: "",
       results: [],
     };
   }
 
-  // On app load
-  componentDidMount() {
-    const apiKey = process.env.REACT_APP_GIPHY_API_KEY;
-    // Fetches trending gifs
+  // Helper function to fetch data through axios
+  fetchData = (endpoint) => {
     axios
-      .get(`http://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=9`)
+      .get(endpoint)
       .then((response) => {
         // Handles success
         const results = response.data.data;
@@ -31,13 +34,30 @@ class App extends Component {
         // Handles error
         console.log(error);
       });
+  };
+
+  // On app load
+  componentDidMount() {
+    this.fetchData(trendingEndpoint);
   }
+
+  // Function to search for GIFs bases on user input
+  search = (event) => {
+    const searchTerm = event.target.value;
+    const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=9`;
+    this.fetchData(searchEndpoint);
+  };
 
   render() {
     return (
       <div className="container pt-4">
+        {/* Header */}
         <h1 className="pb-4">GIPHY Search</h1>
-        <SearchField />
+
+        {/* Search Section */}
+        <SearchField input={this.state.input} search={this.search} />
+
+        {/* GIFs Section */}
         {this.state.results.length !== 0 ? (
           <div>
             <h3 className="pb-2">Trending GIFs</h3>
@@ -50,7 +70,7 @@ class App extends Component {
                   />
                 );
               })}
-            </div>{" "}
+            </div>
           </div>
         ) : (
           <div>
