@@ -45,7 +45,7 @@ class App extends Component {
   search = (searchTerm) => {
     this.setState({ input: searchTerm });
 
-    if (searchTerm.length != 0) {
+    if (searchTerm.length !== 0) {
       const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=9`;
       this.fetchData(searchEndpoint);
     } else {
