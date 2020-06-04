@@ -36,18 +36,21 @@ class App extends Component {
   render() {
     return (
       <div className="container pt-4">
-        <h1>GIPHY Search</h1>
+        <h1 className="pb-4">GIPHY Search</h1>
         <SearchField />
         {this.state.results.length !== 0 ? (
-          <div className="row">
-            {this.state.results.map((result) => {
-              return (
-                <GIFCard
-                  key={result.id}
-                  imageSource={result.images.downsized_medium.url}
-                />
-              );
-            })}
+          <div>
+            <h3 className="pb-2">Trending GIFs</h3>
+            <div className="row text-center">
+              {this.state.results.map((result) => {
+                return (
+                  <GIFCard
+                    key={result.id}
+                    imageSource={result.images.downsized_medium.url}
+                  />
+                );
+              })}
+            </div>{" "}
           </div>
         ) : (
           <div>
