@@ -42,41 +42,45 @@ class App extends Component {
   }
 
   // Function to search for GIFs bases on user input
-  search = (event) => {
-    const searchTerm = event.target.value;
-    const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=9`;
-    this.fetchData(searchEndpoint);
+  search = (searchTerm) => {
+    this.setState({ input: searchTerm });
+
+    if (searchTerm.length != 0) {
+      const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=9`;
+      this.fetchData(searchEndpoint);
+    } else {
+      this.fetchData(trendingEndpoint);
+    }
   };
 
   render() {
     return (
-      <div className="container pt-4">
+      <div className="container">
         {/* Header */}
-        <h1 className="pb-4">GIPHY Search</h1>
-
+        <div className="">
+          <h1 className="pb-4 pt-4">GIPHY Search</h1>
+        </div>
         {/* Search Section */}
-        <SearchField input={this.state.input} search={this.search} />
-
+        <SearchField search={this.search} />
         {/* GIFs Section */}
-        {this.state.results.length !== 0 ? (
-          <div>
+        <div className="mb-4">
+          {this.state.input.length === 0 ? (
             <h3 className="pb-2">Trending GIFs</h3>
-            <div className="row text-center">
-              {this.state.results.map((result) => {
-                return (
-                  <GIFCard
-                    key={result.id}
-                    imageSource={result.images.downsized_medium.url}
-                  />
-                );
-              })}
-            </div>
+          ) : (
+            <h3 className="pb-2">Your Search Results</h3>
+          )}
+
+          <div className="row text-center">
+            {this.state.results.map((result) => {
+              return (
+                <GIFCard
+                  key={result.id}
+                  imageSource={result.images.downsized_medium.url}
+                />
+              );
+            })}
           </div>
-        ) : (
-          <div>
-            <p>Loading Trending Gifs...</p>
-          </div>
-        )}
+        </div>
       </div>
     );
   }
