@@ -2,7 +2,11 @@ import React, { Component } from "react";
 
 class GIFCard extends Component {
   render() {
-    return <div></div>;
+    return (
+      <div>
+        <img src={this.props.imageSource} alt="" />
+      </div>
+    );
   }
 }
 

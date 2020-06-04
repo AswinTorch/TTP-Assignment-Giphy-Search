@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      result: [],
+      results: [],
     };
   }
 
@@ -16,7 +16,7 @@ class App extends Component {
       <div className="container pt-4">
         <h1>GIPHY Search</h1>
         <SearchField />
-        <GIFCard />
+        <GIFCard imageSource="" />
       </div>
     );
   }
