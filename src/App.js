@@ -16,10 +16,13 @@ class App extends Component {
       results: [],
       limit: 9,
     };
+
+    this.loadMore = this.loadMore.bind(this);
   }
 
   // Helper function to fetch data through axios
   fetchData = (endpoint) => {
+    console.log(endpoint);
     axios
       .get(endpoint)
       .then((response) => {
@@ -45,27 +48,32 @@ class App extends Component {
   // Function to search for GIFs bases on user input
   search = (searchTerm) => {
     this.setState({ input: searchTerm });
-    console.log(this.state.input.length);
-    console.log(this.state.limit);
-    // Default limit is 9 if input string is empty
-    if (this.state.input.length === 0) {
-      this.setState({ limit: 9 });
-    }
+
     if (this.state.input.length !== 0) {
-      console.log(this.state.limit);
-      const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=${this.state.limit}`;
+      let searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=${this.state.limit}`;
       this.fetchData(searchEndpoint);
     } else {
-      this.fetchData(trendingEndpoint);
+      // Default search result limit is 9 if input string is empty
+      this.setState({ limit: 9 });
     }
   };
+
+  // Function to load more search results
   loadMore = () => {
     this.setState((state) => ({
       limit: state.limit + 9,
     }));
-    const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${this.state.input}&api_key=${apiKey}&limit=${this.state.limit}`;
-    this.fetchData(searchEndpoint);
   };
+
+  // Checks for state change and if the limit has changed then fetches more data
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.limit !== this.state.limit && this.state.input.length !== 0)
+      this.search(this.state.input);
+
+    // Loads trending data again after input becomes blank after search
+    if (this.state.input.length === 0) this.fetchData(trendingEndpoint);
+  }
+
   render() {
     return (
       <div className="container">
@@ -80,9 +88,11 @@ class App extends Component {
           {this.state.input.length === 0 ? (
             <h3 className="pb-2">Trending GIFs</h3>
           ) : (
-            <h3 className="pb-2">Your Search Results ({this.state.limit})</h3>
+            <h3 className="pb-2">
+              Your Search Results (Max: {this.state.limit})
+            </h3>
           )}
-
+          {/* GIF Cards */}
           <div className="row text-center">
             {this.state.results.map((result) => {
               return (
@@ -93,6 +103,8 @@ class App extends Component {
               );
             })}
           </div>
+
+          {/* Button to load more results */}
           <button className="btn btn-primary mt-4 mb-4" onClick={this.loadMore}>
             Load More
           </button>
