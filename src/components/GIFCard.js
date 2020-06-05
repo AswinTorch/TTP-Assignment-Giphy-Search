@@ -9,10 +9,10 @@ class GIFCard extends Component {
           style={{ width: 350, height: 350 }}
         >
           <img
-            className=" image-fluid rounded"
+            className="rounded"
             src={this.props.imageSource}
             alt="gif"
-            style={{ maxHeight: 340, maxWidth: 350 }}
+            style={{ height: 340, width: 340, objectFit: "fit" }}
           />
         </div>
       </div>
