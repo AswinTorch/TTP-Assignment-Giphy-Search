@@ -45,13 +45,14 @@ class App extends Component {
   // Function to search for GIFs bases on user input
   search = (searchTerm) => {
     this.setState({ input: searchTerm });
-
+    console.log(this.state.input.length);
+    console.log(this.state.limit);
     // Default limit is 9 if input string is empty
     if (this.state.input.length === 0) {
       this.setState({ limit: 9 });
     }
-
-    if (searchTerm.length !== 0) {
+    if (this.state.input.length !== 0) {
+      console.log(this.state.limit);
       const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=${this.state.limit}`;
       this.fetchData(searchEndpoint);
     } else {
@@ -59,8 +60,11 @@ class App extends Component {
     }
   };
   loadMore = () => {
-    this.setState({ limit: this.state.limit + 9 });
-    this.search(this.state.input);
+    this.setState((state) => ({
+      limit: state.limit + 9,
+    }));
+    const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${this.state.input}&api_key=${apiKey}&limit=${this.state.limit}`;
+    this.fetchData(searchEndpoint);
   };
   render() {
     return (
