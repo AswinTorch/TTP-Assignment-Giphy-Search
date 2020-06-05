@@ -14,6 +14,7 @@ class App extends Component {
     this.state = {
       input: "",
       results: [],
+      limit: 9,
     };
   }
 
@@ -45,14 +46,22 @@ class App extends Component {
   search = (searchTerm) => {
     this.setState({ input: searchTerm });
 
+    // Default limit is 9 if input string is empty
+    if (this.state.input.length === 0) {
+      this.setState({ limit: 9 });
+    }
+
     if (searchTerm.length !== 0) {
-      const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=9`;
+      const searchEndpoint = `http://api.giphy.com/v1/gifs/search?q=${searchTerm}&api_key=${apiKey}&limit=${this.state.limit}`;
       this.fetchData(searchEndpoint);
     } else {
       this.fetchData(trendingEndpoint);
     }
   };
-
+  loadMore = () => {
+    this.setState({ limit: this.state.limit + 9 });
+    this.search(this.state.input);
+  };
   render() {
     return (
       <div className="container">
@@ -67,7 +76,7 @@ class App extends Component {
           {this.state.input.length === 0 ? (
             <h3 className="pb-2">Trending GIFs</h3>
           ) : (
-            <h3 className="pb-2">Your Search Results</h3>
+            <h3 className="pb-2">Your Search Results ({this.state.limit})</h3>
           )}
 
           <div className="row text-center">
@@ -80,6 +89,9 @@ class App extends Component {
               );
             })}
           </div>
+          <button className="btn btn-primary mt-4 mb-4" onClick={this.loadMore}>
+            Load More
+          </button>
         </div>
       </div>
     );
